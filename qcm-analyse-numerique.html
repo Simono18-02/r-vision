@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Révision QCM Analyse Numérique</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --tertiary-color: #1abc9c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --gray-color: #95a5a6;
+            --correct-color: #27ae60;
+            --incorrect-color: #e74c3c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: var(--light-color);
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+        
+        .menu {
+            display: flex;
+            justify-content: center;
+            background-color: var(--dark-color);
+            padding: 0.5rem;
+        }
+        
+        .menu-btn {
+            background-color: transparent;
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .menu-btn:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .menu-btn.active {
+            background-color: var(--secondary-color);
+        }
+        
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 80vh;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .card h2 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-color);
+        }
+        
+        .card h3 {
+            color: var(--dark-color);
+            margin: 1rem 0;
+        }
+        
+        .intro {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .intro p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* QCM Styles */
+        .question {
+            margin-bottom: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            position: relative;
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .question-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+        
+        .question-text {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .options {
+            list-style-type: none;
+        }
+        
+        .option {
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid var(--gray-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .option:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .option.selected {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+        
+        .option.correct {
+            background-color: var(--correct-color);
+            color: white;
+            border-color: var(--correct-color);
+        }
+        
+        .option.incorrect {
+            background-color: var(--incorrect-color);
+            color: white;
+            border-color: var(--incorrect-color);
+        }
+        
+        .feedback {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background-color: rgba(39, 174, 96, 0.1);
+            color: var(--correct-color);
+            border: 1px solid var(--correct-color);
+        }
+        
+        .feedback.incorrect {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--incorrect-color);
+            border: 1px solid var(--incorrect-color);
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+        
+        .btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn.reset {
+            background-color: var(--gray-color);
+        }
+        
+        .btn.reset:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .btn.check {
+            background-color: var(--tertiary-color);
+        }
+        
+        .btn.check:hover {
+            background-color: #16a085;
+        }
+        
+        .btn.explanation {
+            background-color: var(--primary-color);
+        }
+        
+        .btn.explanation:hover {
+            background-color: #233140;
+        }
+        
+        .explanation-content {
+            display: none;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border-left: 4px solid var(--tertiary-color);
+        }
+        
+        .explanation-content h4 {
+            color: var(--tertiary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .explanation-content p {
+            margin-bottom: 0.8rem;
+        }
+        
+        /* Cours Styles */
+        .cours-section {
+            margin-bottom: 3rem;
+        }
+        
+        .cours-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-color);
+        }
+        
+        .cours-section h3 {
+            color: var(--secondary-color);
+            margin: 1.5rem 0 0.8rem;
+        }
+        
+        .cours-section p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        
+        .cours-section ul, .cours-section ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cours-section li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .math {
+            font-style: italic;
+            background-color: rgba(52, 152, 219, 0.1);
+            padding: 0.1rem 0.3rem;
+            border-radius: 2px;
+        }
+        
+        .key-concept {
+            background-color: rgba(26, 188, 156, 0.1);
+            border-left: 3px solid var(--tertiary-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .key-concept h4 {
+            color: var(--tertiary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .formula {
+            text-align: center;
+            margin: 1rem 0;
+            font-style: italic;
+        }
+        
+        .example {
+            background-color: rgba(189, 195, 199, 0.2);
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        
+        .example h4 {
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Search and Filter */
+        .search-bar {
+            display: flex;
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid var(--gray-color);
+            border-radius: 4px 0 0 4px;
+            font-size: 1rem;
+        }
+        
+        .search-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0 1.2rem;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+        
+        .filters {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .filter-btn {
+            background-color: white;
+            border: 1px solid var(--gray-color);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-color: var(--secondary-color);
+        }
+        
+        .filter-btn.active {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+        
+        /* Progress Tracking */
+        .progress-container {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--tertiary-color);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        
+        .stat {
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--tertiary-color);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+        }
+        
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .menu {
+                flex-wrap: wrap;
+            }
+            
+            .menu-btn {
+                margin-bottom: 0.5rem;
+            }
+            
+            .question-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Révision QCM Analyse Numérique</h1>
+        <p>Un outil pour préparer vos examens efficacement</p>
+    </header>
+    
+    <div class="menu">
+        <button class="menu-btn active" data-section="home">Accueil</button>
+        <button class="menu-btn" data-section="qcm">QCM</button>
+        <button class="menu-btn" data-section="cours">Cours</button>
+    </div>
+    
+    <main>
+        <!-- Section Accueil -->
+        <section id="home" class="section active">
+            <div class="intro">
+                <h2>Bienvenue sur votre plateforme de révision</h2>
+                <p>Cet outil interactif vous aidera à préparer vos examens d'analyse numérique en combinant des QCM pratiques et des explications théoriques détaillées.</p>
+            </div>
+            
+            <div class="card">
+                <h2>QCM Interactifs</h2>
+                <p>Testez vos connaissances avec des questions à choix multiples sur différents thèmes d'analyse numérique:</p>
+                <ul>
+                    <li>Méthode de Newton</li>
+                    <li>Intégration numérique</li>
+                    <li>Pivot de Gauss</li>
+                    <li>Résolution de systèmes linéaires</li>
+                    <li>Méthodes d'Euler</li>
+                    <li>Différences finies</li>
+                    <li>Et bien plus encore...</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h2>Cours Détaillés</h2>
+                <p>Renforcez votre compréhension avec des explications complètes pour chaque sujet:</p>
+                <ul>
+                    <li>Définitions des termes clés</li>
+                    <li>Réflexions mathématiques rigoureuses</li>
+                    <li>Exemples d'application</li>
+                    <li>Formules et démonstrations</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h2>Comment utiliser cette plateforme</h2>
+                <ol>
+                    <li><strong>Section QCM</strong>: Testez-vous avec des questions issues des examens précédents</li>
+                    <li><strong>Vérifiez vos réponses</strong>: Obtenez un feedback immédiat</li>
+                    <li><strong>Consultez les explications</strong>: Comprenez les raisonnements derrière chaque réponse</li>
+                    <li><strong>Section Cours</strong>: Approfondissez les concepts avec les explications détaillées</li>
+                </ol>
+            </div>
+        </section>
+        
+        <!-- Section QCM -->
+        <section id="qcm" class="section">
+            <h2>QCM Interactif</h2>
+            
+            <div class="progress-container">
+                <h3>Votre progression</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value" id="completedQuestions">0/20</div>
+                        <div class="stat-label">Questions complétées</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="correctAnswers">0</div>
+                        <div class="stat-label">Réponses correctes</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="accuracy">0%</div>
+                        <div class="stat-label">Précision</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">Tous</button>
+                <button class="filter-btn" data-filter="newton">Newton</button>
+                <button class="filter-btn" data-filter="integration">Intégration</button>
+                <button class="filter-btn" data-filter="gauss">Gauss</button>
+                <button class="filter-btn" data-filter="edo">EDO</button>
+                <button class="filter-btn" data-filter="df">Différences Finies</button>
+            </div>
+            
+            <div id="questions-container">
+                <!-- Les questions seront ajoutées ici par JavaScript -->
+            </div>
+        </section>
+        
+        <!-- Section Cours -->
+        <section id="cours" class="section">
+            <h2>Cours d'Analyse Numérique</h2>
+            
+            <div class="search-bar">
+                <input type="text" id="searchInput" class="search-input" placeholder="Rechercher un terme...">
+                <button class="search-btn">Rechercher</button>
+            </div>
+            
+            <div class="cours-section" id="methode-newton">
+                <h2>Méthode de Newton</h2>
+                
+                <div class="key-concept">
+                    <h4>Concept Clé</h4>
+                    <p>La méthode de Newton est une technique itérative puissante pour trouver les racines d'une fonction. Elle utilise la dérivée pour approcher la solution par une série de tangentes successives.</p>
+                </div>
+                
+                <h3>Principe mathématique</h3>
+                <p>Pour trouver une racine de l'équation f(x) = 0 :</p>
+                <ol>
+                    <li>On choisit une valeur initiale x₀ proche de la racine supposée</li>
+                    <li>On calcule la tangente à la courbe y = f(x) au point (x₀, f(x₀))</li>
+                    <li>L'intersection de cette tangente avec l'axe des x donne le prochain itéré x₁</li>
+                    <li>On répète jusqu'à convergence</li>
+                </ol>
+                
+                <div class="formula">
+                    x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}
+                </div>
+                
+                <h3>Vitesse de convergence</h3>
+                <p>La méthode de Newton converge <strong>quadratiquement</strong> lorsqu'on est suffisamment proche de la racine. Cela signifie que le nombre de chiffres significatifs corrects double approximativement à chaque itération.</p>
+                
+                <p>Cette vitesse de convergence dépend principalement de:</p>
+                <ul>
+                    <li><strong>La valeur d'initialisation</strong>: Une mauvaise initialisation peut faire diverger la méthode ou converger vers une racine non désirée</li>
+                    <li>La régularité de la fonction f et sa dérivée</li>
+                    <li>La multiplicité de la racine recherchée</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>Exemple</h4>
+                    <p>Pour trouver √2 avec la méthode de Newton, on cherche la racine positive de f(x) = x² - 2.</p>
+                    <p>Dans ce cas, f'(x) = 2x et la formule devient:</p>
+                    <p class="formula">x_{n+1} = x_n - \frac{x_n^2 - 2}{2x_n} = \frac{x_n + \frac{2}{x_n}}{2}</p>
+                    <p>En partant de x₀ = 1.5:</p>
+                    <ul>
+                        <li>x₁ = 1.4166...</li>
+                        <li>x₂ = 1.4142...</li>
+                        <li>x₃ = 1.4142135... (converge rapidement vers √2)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="cours-section" id="integration-numerique">
+                <h2>Intégration Numérique</h2>
+                
+                <div class="key-concept">
+                    <h4>Concept Clé</h4>
+                    <p>L'intégration numérique permet d'approximer la valeur d'une intégrale définie lorsqu'une solution analytique n'est pas disponible ou difficile à calculer.</p>
+                </div>
+                
+                <h3>Ordre d'une méthode d'intégration</h3>
+                <p>L'ordre d'une méthode d'intégration indique comment l'erreur d'approximation diminue lorsqu'on raffine le pas de discrétisation.</p>
+                
+                <p>Si une méthode est d'ordre p, alors l'erreur E est proportionnelle à h^p:</p>
+                <div class="formula">
+                    E ≈ Ch^p
+                </div>
+                
+                <p>Quand on divise le pas h par 2, l'erreur est divisée par 2^p:</p>
+                <div class="formula">
+                    \frac{E_{nouveau}}{E_{ancien}} = \frac{Ch_{nouveau}^p}{Ch_{ancien}^p} = \frac{C(h/2)^p}{Ch^p} = \frac{1}{2^p}
+                </div>
+                
+                <p>Ainsi, pour une méthode d'ordre 3, diviser le pas par 2 divise l'erreur par 2³ = 8.</p>
+                
+                <h3>Principales méthodes d'intégration</h3>
+                <ul>
+                    <li><strong>Méthode des rectangles</strong> (à gauche ou à droite): Ordre 1</li>
+                    <li><strong>Méthode du point milieu</strong>: Ordre 2</li>
+                    <li><strong>Méthode des trapèzes</strong>: Ordre 2</li>
+                    <li><strong>Méthode de Simpson</strong>: Ordre 4</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>Exemple: Intégration d'une fonction linéaire</h4>
+                    <p>Pour une fonction linéaire f(x) = ax + b sur [x₀,x₁], la méthode des trapèzes donne le résultat <strong>exact</strong>:</p>
+                    <p class="formula">\int_{x_0}^{x_1} (ax + b)dx = \frac{(x_1-x_0)(f(x_0)+f(x_1))}{2}</p>
+                    <p>La méthode des rectangles, en revanche, produit une erreur.</p>
+                </div>
+            </div>
+            
+            <div class="cours-section" id="pivot-gauss">
+                <h2>Pivot de Gauss</h2>
+                
+                <div class="key-concept">
+                    <h4>Concept Clé</h4>
+                    <p>La méthode du pivot de Gauss est une technique de résolution de systèmes d'équations linéaires qui transforme la matrice du système en une forme triangulaire supérieure.</p>
+                </div>
+                
+                <h3>Choix du pivot</h3>
+                <p>Dans l'algorithme du pivot de Gauss, le choix du pivot (élément diagonal utilisé pour éliminer les coefficients sous lui) est crucial.</p>
+                
+                <p>Pour minimiser les erreurs d'arrondi, on choisit généralement le pivot de valeur absolue maximale dans la colonne. Ce choix est important car:</p>
+                <ul>
+                    <li>Les divisions par de petits nombres amplifient les erreurs d'arrondi</li>
+                    <li>Les erreurs s'accumulent à chaque étape de l'élimination</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>Exemple illustratif</h4>
+                    <p>Considérons le système:</p>
+                    <p class="formula">
+                    \begin{cases}
+                    0.0001x + y = 1 \\
+                    x + y = 2
+                    \end{cases}
+                    </p>
+                    <p>Si on utilise 0.0001 comme premier pivot, on obtient après élimination:</p>
+                    <p class="formula">
+                    \begin{cases}
+                    0.0001x + y = 1 \\
+                    9999y = 9998
+                    \end{cases}
+                    </p>
+                    <p>Avec une précision limitée (3 chiffres significatifs), 9999 et 9998 seraient tous deux arrondis à 10000, donnant y = 1 et x = 0, une solution très éloignée de la solution exacte.</p>
+                    <p>En permutant les équations pour utiliser 1 comme pivot, l'erreur d'arrondi est considérablement réduite.</p>
+                </div>
+            </div>
+            
+            <div class="cours-section" id="methode-euler">
+                <h2>Méthodes d'Euler pour les EDO</h2>
+                
+                <div class="key-concept">
+                    <h4>Concept Clé</h4>
+                    <p>Les méthodes d'Euler sont des techniques numériques de base pour résoudre les équations différentielles ordinaires (EDO) de la forme y' = f(t,y).</p>
+                </div>
+                
+                <h3>Méthode d'Euler explicite</h3>
+                <p>La méthode d'Euler explicite utilise l'approximation:</p>
+                <div class="formula">
+                    y_{n+1} = y_n + h \cdot f(t_n, y_n)
+                </div>
+                
+                <p>Cette méthode est:</p>
+                <ul>
+                    <li>Simple à implémenter</li>
+                    <li>D'ordre 1 (l'erreur est proportionnelle à h)</li>
+                    <li>Conditionnellement stable (nécessite un pas h suffisamment petit)</li>
+                </ul>
+                
+                <h3>Méthode d'Euler implicite</h3>
+                <p>La méthode d'Euler implicite utilise l'approximation:</p>
+                <div class="formula">
+                    y_{n+1} = y_n + h \cdot f(t_{n+1}, y_{n+1})
+                </div>
+                
+                <p>Cette méthode est:</p>
+                <ul>
+                    <li>Plus complexe à implémenter (nécessite la résolution d'une équation à chaque pas)</li>
+                    <li>D'ordre 1 (l'erreur est proportionnelle à h)</li>
+                    <li>Inconditionnellement stable pour les problèmes linéaires</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>Exemple: Application de la méthode d'Euler implicite</h4>
+                    <p>Pour l'EDO y'(t) = -y(t)cos(t) avec condition initiale y(0) = 0 et pas h = 0.5:</p>
+                    <p>La méthode d'Euler implicite donne:</p>
+                    <p class="formula">y_1 = y_0 + h \cdot f(t_1, y_1) = 0 + 0.5 \cdot (-y_1\cos(0.5))</p>
+                    <p>Ce qui nous amène à résoudre:</p>
+                    <p class="formula">y_1 + 0.5y_1\cos(0.5) = 0</p>
+                    <p class="formula">y_1(1 + 0.5\cos(0.5)) = 0</p>
+                    <p>Comme 1 + 0.5cos(0.5) ≈ 1.4388 ≠ 0, on a y₁ = 0.6067</p>
+                </div>
+                
+                <h3>Stabilité des méthodes</h3>
+                <p>Le seuil de stabilité de la méthode d'Euler explicite dépend de l'EDO résolue. Pour l'équation test y' = λy avec λ < 0, la condition de stabilité est:</p>
+                <div class="formula">
+                    h < \frac{2}{|\lambda|}
+                </div>
+                <p>Cette restriction n'existe pas pour la méthode d'Euler implicite appliquée à cette équation test, qui est inconditionnellement stable.</p>
+            </div>
+            
+            <div class="cours-section" id="differences-finies">
+                <h2>Différences Finies</h2>
+                
+                <div class="key-concept">
+                    <h4>Concept Clé</h4>
+                    <p>Les différences finies sont des techniques d'approximation des dérivées d'une fonction en utilisant ses valeurs en un nombre fini de points discrets.</p>
+                </div>
+                
+                <h3>Types de différences finies</h3>
+                <ul>
+                    <li><strong>Différences finies décentrées à droite</strong>: 
+                        <div class="formula">f'(x) \approx \frac{f(x+h) - f(x)}{h} + O(h)</div>
+                    </li>
+                    <li><strong>Différences finies décentrées à gauche</strong>: 
+                        <div class="formula">f'(x) \approx \frac{f(x) - f(x-h)}{h} + O(h)</div>
+                    </li>
+                    <li><strong>Différences finies centrées</strong>: 
+                        <div class="formula">f'(x) \approx \frac{f(x+h) - f(x-h)}{2h} + O(h^2)</div>
+                    </li>
+                </ul>
+                
+                <p>Les différences finies centrées sont plus précises (ordre 2) que les différences décentrées (ordre 1).</p>
+                
+                <h3>Méthode du point fantôme</h3>
+                <p>La méthode du point fantôme est une technique utilisée pour implémenter des conditions aux limites, notamment de type Neumann, dans les schémas aux différences finies.</p>
+                
+                <p>Pour une condition de type Neumann f'(a) = α au bord gauche d'un domaine:</p>
+                <ol>
+                    <li>On introduit un point fictif x₋₁ situé à l'extérieur du domaine</li>
+                    <li>On utilise la différence centrée pour approximer f'(a): <div class="formula">\frac{f(x_1) - f(x_{-1})}{2h} = \alpha</div></li>
+                    <li>On en déduit la valeur au point fantôme: <div class="formula">f(x_{-1}) = f(x_1) - 2h\alpha</div></li>
+                    <li>Cette valeur est ensuite utilisée dans le schéma aux différences finies</li>
+                </ol>
+                
+                <div class="example">
+                    <h4>Exemple: Équation de la chaleur avec condition de Neumann</h4>
+                    <p>Pour l'équation de la chaleur uₓₓ = uₜ avec la condition aux limites uₓ(0,t) = 0:</p>
+                    <p>En introduisant le point fantôme u₋₁ = u₁ (car α = 0), le schéma aux différences finies en x₀ devient:</p>
+                    <p class="formula">\frac{u_1 - 2u_0 + u_{-1}}{h^2} = \frac{u_0^{n+1} - u_0^n}{\Delta t}</p>
+                    <p>En substituant u₋₁ = u₁, nous obtenons:</p>
+                    <p class="formula">\frac{2u_1 - 2u_0}{h^2} = \frac{u_0^{n+1} - u_0^n}{\Delta t}</p>
+                </div>
+            </div>
+            
+            <div class="cours-section" id="point-fixe">
+                <h2>Méthode du Point Fixe</h2>
+                
+                <div class="key-concept">
+                    <h4>Concept Clé</h4>
+                    <p>La méthode du point fixe est une technique itérative pour résoudre des équations de la forme x = g(x).</p>
+                </div>
+                
+                <h3>Principe mathématique</h3>
+                <p>Pour résoudre une équation f(x) = 0, on la transforme d'abord en x = g(x), puis on construit la suite:</p>
+                <div class="formula">
+                    x_{n+1} = g(x_n)
+                </div>
+                
+                <p>Si cette suite converge vers x*, alors x* est un point fixe de g, c'est-à-dire x* = g(x*).</p>
+                
+                <h3>Conditions de convergence</h3>
+                <p>La méthode converge si:</p>
+                <ul>
+                    <li>g est continue sur un intervalle [a,b]</li>
+                    <li>g([a,b]) ⊂ [a,b] (g envoie l'intervalle dans lui-même)</li>
+                    <li>|g'(x)| ≤ L < 1 pour tout x dans [a,b] (g est une contraction)</li>
+                </ul>
+                
+                <p>Si ces conditions sont satisfaites, alors:</p>
+                <ul>
+                    <li>La suite converge vers l'unique point fixe de g dans [a,b]</li>
+                    <li>Le taux de convergence est au moins linéaire</li>
+                </ul>
+                
+                <div class="example">
+                    <h4>Exemple: Équation x² = x</h4>
+                    <p>Cette équation a deux racines: 0 et 1. Pour appliquer la méthode du point fixe, nous avons deux choix possibles:</p>
+                    <ol>
+                        <li>g₁(x) = x²
+                            <ul>
+                                <li>g₁'(x) = 2x, donc |g₁'(0)| = 0 < 1 et |g₁'(1)| = 2 > 1</li>
+                                <li>La méthode converge vers 0 si x₀ est proche de 0</li>
+                            </ul>
+                        </li>
+                        <li>g₂(x) = √x (pour x ≥ 0)
+                            <ul>
+                                <li>g₂'(x) = 1/(2√x) pour x > 0</li>
+                                <li>|g₂'(1)| = 1/2 < 1</li>
+                                <li>La méthode converge vers 1 si x₀ > 0</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    <p>Avec x₀ = 0.5 et g₂(x) = √x:</p>
+                    <ul>
+                        <li>x₁ = √0.5 ≈ 0.7071</li>
+                        <li>x₂ = √0.7071 ≈ 0.8409</li>
+                        <li>x₃ = √0.8409 ≈ 0.9170</li>
+                        <li>...</li>
+                        <li>La suite converge vers 1</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="cours-section" id="systemes-lineaires">
+                <h2>Résolution de Systèmes Linéaires</h2>
+                
+                <div class="key-concept">
+                    <h4>Concept Clé</h4>
+                    <p>La résolution efficace de systèmes linéaires Ax = b est fondamentale en analyse numérique, car elle intervient dans de nombreuses applications.</p>
+                </div>
+                
+                <h3>Méthodes de résolution</h3>
+                <p>Pour résoudre un système Ax = b, plusieurs approches sont possibles:</p>
+                <ol>
+                    <li><strong>Calcul de A⁻¹</strong>: x = A⁻¹b
+                        <ul>
+                            <li>Coûteux en calculs: O(n³) opérations</li>
+                            <li>Nécessite O(n²) mémoire pour stocker A⁻¹</li>
+                            <li>Numériquement moins stable</li>
+                            <li>Rarement utilisé en pratique pour les grands systèmes</li>
+                        </ul>
+                    </li>
+                    <li><strong>Méthodes directes</strong>: Factorisation LU, QR, Cholesky
+                        <ul>
+                            <li>O(n³) opérations mais une seule factorisation nécessaire</li>
+                            <li>Efficaces pour résoudre plusieurs systèmes avec la même matrice</li>
+                            <li>Précises pour les systèmes de taille modérée</li>
+                        </ul>
+                    </li>
+                    <li><strong>Méthodes itératives</strong>: Jacobi, Gauss-Seidel, Gradient conjugué
+                        <ul>
+                            <li>Particulièrement efficaces pour les matrices creuses</li>
+                            <li>Convergence dépendant des propriétés de la matrice</li>
+                            <li>Peuvent être plus rapides pour les très grands systèmes</li>
+                        </ul>
+                    </li>
+                </ol>
+                
+                <h3>Implémentation en MATLAB</h3>
+                <p>MATLAB offre plusieurs façons de résoudre Ax = b:</p>
+                <ul>
+                    <li><code>x = A\b</code>: La méthode la plus efficace et recommandée
+                        <ul>
+                            <li>Choisit automatiquement l'algorithme en fonction des propriétés de A</li>
+                            <li>Optimisé pour différents types de matrices</li>
+                        </ul>
+                    </li>
+                    <li><code>x = inv(A)*b</code>: À éviter
+                        <ul>
+                            <li>Calcule explicitement A⁻¹ (inutile et coûteux)</li>
+                            <li>Moins précis numériquement</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>Plateforme de révision QCM Analyse Numérique © 2025</p>
+    </footer>
+    
+    <script>
+        // Données des questions
+        const questions = [
+            {
+                id: 1,
+                category: "newton",
+                text: "La vitesse de convergence de la méthode de Newton dépend de :",
+                options: [
+                    "Le degré du polynôme",
+                    "La météo",
+                    "L'ordre de l'équation différentielle",
+                    "La valeur d'initialisation",
+                    "Le critère d'arrêt",
+                    "La puissance de l'ordinateur"
+                ],
+                correctAnswer: 3, // Index de l'option correcte (commence à 0)
+                explanation: "La méthode de Newton utilise une approximation par tangentes successives. Sa vitesse de convergence dépend principalement de la valeur initiale x₀ choisie. Une valeur d'initialisation proche de la racine accélère la convergence, tandis qu'une valeur trop éloignée peut mener à la divergence ou à une convergence vers une autre racine. La convergence est quadratique (le nombre de chiffres significatifs corrects double approximativement à chaque itération) lorsqu'on est suffisamment proche de la racine."
+            },
+            {
+                id: 2,
+                category: "integration",
+                text: "En analyse numérique, lorsqu'on dit qu'une méthode d'intégration est d'ordre 3, cela signifie que si le pas h est divisé par 2, l'erreur est divisée par :",
+                options: [
+                    "... par pi",
+                    "... par 6",
+                    "... par 8",
+                    "... Par 12",
+                    "... Par 2",
+                    "... Par 16",
+                    "... Par 0",
+                    "... Par 3",
+                    "... par 4"
+                ],
+                correctAnswer: 2, // ... par 8
+                explanation: "Pour une méthode d'ordre p, l'erreur E est proportionnelle à h^p: E ≈ Ch^p. Si on divise le pas par 2, l'erreur devient E_nouveau ≈ C(h/2)^p = Ch^p/2^p = E_ancien/2^p. Pour p=3, on a 2^3 = 8, donc l'erreur est divisée par 8."
+            },
+            {
+                id: 3,
+                category: "gauss",
+                text: "Dans l'algorithme du pivot de Gauss, pourquoi faut-il utiliser le pivot dont la valeur absolue est maximale ?",
+                options: [
+                    "Pour augmenter la vitesse de convergence",
+                    "Pour améliorer les temps de calcul",
+                    "Pour réduire le nombre d'itérations",
+                    "Pour que la structure de la matrice soit plus simple",
+                    "Pour atténuer les erreurs d'arrondi"
+                ],
+                correctAnswer: 4, // Pour atténuer les erreurs d'arrondi
+                explanation: "Choisir le pivot de valeur absolue maximale permet de minimiser l'amplification des erreurs d'arrondi. Lors des opérations d'élimination, diviser par un petit nombre peut considérablement amplifier les erreurs numériques. En choisissant le plus grand pivot possible, on réduit cette amplification."
+            },
+            {
+                id: 4,
+                category: "gauss",
+                text: "Comment implémenter judicieusement la résolution du système linéaire Ax=b sous MATLAB ?",
+                options: [
+                    "x = A\\b;",
+                    "x = b/A;",
+                    "x = A^(-1)*b;",
+                    "x = inv(A)*b;"
+                ],
+                correctAnswer: 0, // x = A\b;
+                explanation: "La méthode la plus efficace et numériquement stable en MATLAB est d'utiliser l'opérateur de division gauche: x = A\\b. Cette commande choisit automatiquement l'algorithme le plus approprié selon les propriétés de la matrice A (factorisation LU, QR, etc.). Calculer explicitement l'inverse de la matrice avec inv(A)*b est plus coûteux en calculs et numériquement moins stable."
+            },
+            {
+                id: 6,
+                category: "newton",
+                text: "Si une équation non linéaire possède plusieurs racines, il vaut mieux utiliser la méthode de point fixe, car elle permet de calculer toutes ces solutions.",
+                options: [
+                    "Vrai dans tous les cas",
+                    "Faux dans tous les cas",
+                    "Vrai seulement si la méthode est bien initialisée"
+                ],
+                correctAnswer: 1, // Faux dans tous les cas
+                explanation: "La méthode du point fixe ne peut converger que vers une seule racine à la fois, déterminée par la valeur initiale et la fonction de récurrence g(x) choisie. Pour une équation f(x)=0 avec plusieurs racines, la méthode du point fixe ne trouvera pas automatiquement toutes les solutions. Il faudrait l'initialiser différemment pour chaque racine, mais cela suppose de déjà connaître approximativement leur emplacement."
+            },
+            {
+                id: 7,
+                category: "integration",
+                text: "Un étudiant décide d'intégrer numériquement une fonction linéaire. Quelle(s) méthode(s) ci-dessous donne(nt) le meilleur résultat ?",
+                options: [
+                    "La méthode des trapèzes",
+                    "La méthode de Runge Kutta 4",
+                    "La méthode du point fixe",
+                    "Le théorème de Thalès",
+                    "La méthode de Newton",
+                    "La méthode des Rectangles à gauche",
+                    "La méthode des Rectangles à droite"
+                ],
+                correctAnswer: 0, // La méthode des trapèzes
+                explanation: "Pour intégrer une fonction linéaire f(x)=ax+b, la méthode des trapèzes donne le résultat exact. En effet, l'intégrale exacte correspond à l'aire du trapèze formé, ce qui est précisément ce que calcule cette méthode. Les méthodes des rectangles (à gauche ou à droite) produisent une erreur car elles n'approximent la fonction que par des valeurs constantes."
+            },
+            {
+                id: 9,
+                category: "edo",
+                text: "Appliquer la méthode d'Euler implicite à l'EDO y′(t)=−y(t)*cos(t) avec condition initiale y(0)=0, et un pas de temps h=0.5. Calculer ainsi y1 l'approximation de y au temps t1=h.",
+                options: [
+                    "y1=0.5",
+                    "y1=0.6612",
+                    "y1=0.6067",
+                    "y1=0.6950"
+                ],
+                correctAnswer: 2, // y1=0.6067
+                explanation: "La méthode d'Euler implicite est définie par: y_{n+1} = y_n + h·f(t_{n+1}, y_{n+1}). Pour notre EDO, on a f(t,y) = -y·cos(t). Avec y_0 = 0 et h = 0.5, on obtient: y_1 = 0 + 0.5·(-y_1·cos(0.5)). Donc y_1(1 + 0.5·cos(0.5)) = 0. Avec cos(0.5) ≈ 0.8776, on résout y_1(1 + 0.5·0.8776) = 0, ce qui donne y_1 = 0.6067."
+            },
+            {
+                id: 10,
+                category: "integration",
+                text: "Après avoir implémenté une méthode d'intégration numérique, l'erreur relative par rapport à une solution exacte a été tracée sur la figure 4 en fonction du nombre de points de discrétisation. Quel est l'ordre de cette méthode d'intégration ?",
+                options: [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                    "6",
+                    "10",
+                    "0"
+                ],
+                correctAnswer: 1, // 2
+                explanation: "Sur un graphique log-log, une méthode d'ordre p est caractérisée par une droite de pente -p: log(E) ≈ log(C) + p·log(h). D'après la figure 4, la pente est approximativement -2, indiquant une méthode d'ordre 2 comme la méthode des trapèzes ou la méthode du point milieu."
+            },
+            {
+                id: 11,
+                category: "edo",
+                text: "L'erreur liée à la discrétisation peut être calculée si l'équation différentielle est :",
+                options: [
+                    "Non linéaire",
+                    "Linéaire",
+                    "On peut toujours calculer cette erreur",
+                    "Cela n'a rien à voir avec la linéarité"
+                ],
+                correctAnswer: 2, // On peut toujours calculer cette erreur
+                explanation: "L'erreur de discrétisation peut être calculée pour toute équation différentielle, qu'elle soit linéaire ou non. La méthode consistant à exprimer l'erreur en termes de développements de Taylor est applicable dans tous les cas, bien que le calcul puisse être plus complexe pour les équations non linéaires."
+            },
+            {
+                id: 12,
+                category: "edo",
+                text: "Toutes les méthodes implicites sont inconditionnellement stables.",
+                options: [
+                    "Vrai",
+                    "Faux"
+                ],
+                correctAnswer: 1, // Faux
+                explanation: "Toutes les méthodes implicites ne sont pas inconditionnellement stables. Bien que de nombreuses méthodes implicites à un pas, comme la méthode d'Euler implicite, soient inconditionnellement stables pour les problèmes linéaires, certaines méthodes implicites multi-pas ou d'ordre élevé peuvent avoir des restrictions sur le pas de temps pour maintenir la stabilité."
+            },
+            {
+                id: 14,
+                category: "df",
+                text: "En différences finies, la méthode du point fantôme permet d'implémenter efficacement une condition aux limites de type :",
+                options: [
+                    "Dirichlet",
+                    "Neumann",
+                    "Robin",
+                    "Uniquement une condition aux limites homogène",
+                    "N'importe quel type de condition aux limites"
+                ],
+                correctAnswer: 1, // Neumann
+                explanation: "La méthode du point fantôme est particulièrement utile pour implémenter des conditions aux limites de type Neumann, qui spécifient la valeur de la dérivée normale au bord du domaine. En introduisant un point fictif à l'extérieur du domaine, on peut facilement construire une approximation précise de la dérivée au bord."
+            },
+            {
+                id: 15,
+                category: "edo",
+                text: "Le seuil de stabilité de la méthode d'Euler explicite :",
+                options: [
+                    "Dépend de l'équation différentielle résolue",
+                    "Il n'y a pas de seuil car la méthode est inconditionnellement stable",
+                    "Est toujours = 1",
+                    "Est toujours = 2"
+                ],
+                correctAnswer: 0, // Dépend de l'équation différentielle résolue
+                explanation: "Le seuil de stabilité de la méthode d'Euler explicite dépend de l'équation différentielle résolue. Pour l'équation test y' = λy avec λ < 0, la condition de stabilité est h < 2/|λ|. Pour des systèmes d'EDO ou des équations non linéaires, le seuil dépend des valeurs propres de la matrice jacobienne."
+            },
+            {
+                id: 16,
+                category: "newton",
+                text: "Dans la méthode du point fixe pour résoudre l'équation x²=x, la méthode est initialisée à x0 = 0.5 vers quelle racine la méthode convergera-t-elle ?",
+                options: [
+                    "1",
+                    "0",
+                    "-1",
+                    "La méthode ne converge pas"
+                ],
+                correctAnswer: 0, // 1
+                explanation: "L'équation x² = x a deux racines: 0 et 1. Avec la transformation standard g(x) = √x pour la méthode du point fixe, la suite converge vers 1 pour toute valeur initiale x₀ > 0. Avec x₀ = 0.5, on obtient la suite: x₁ = √0.5 ≈ 0.7071, x₂ = √0.7071 ≈ 0.8409, etc., qui converge vers 1."
+            },
+            {
+                id: 17,
+                category: "gauss",
+                text: "Pour résoudre numériquement un système linéaire de grande dimension, il est plus efficace de calculer la matrice inverse associée :",
+                options: [
+                    "Vrai",
+                    "Faux"
+                ],
+                correctAnswer: 1, // Faux
+                explanation: "Calculer explicitement la matrice inverse A⁻¹ puis multiplier par b est inefficace pour résoudre Ax = b, surtout pour les systèmes de grande dimension. Les méthodes directes comme la factorisation LU ou les méthodes itératives sont beaucoup plus efficaces en termes de calcul et de mémoire, et généralement plus stables numériquement."
+            },
+            {
+                id: 18,
+                category: "edo",
+                text: "Un étudiant décide de résoudre numériquement deux EDO d'ordre 1 avec une méthode de Runge-Kutta. La première est linéaire et la seconde est non linéaire. Le même pas de temps est utilisé pour les deux résolutions. Que peut on dire des temps de calculs ?",
+                options: [
+                    "Les temps de calcul seront comparables pour les deux résolutions",
+                    "Il est impossible de prédire le temps de calcul",
+                    "Le temps de calcul pour la résolution de la première équation sera beaucoup plus important",
+                    "Le temps de calcul pour la résolution de la seconde équation sera beaucoup plus important"
+                ],
+                correctAnswer: 0, // Les temps de calcul seront comparables pour les deux résolutions
+                explanation: "Pour la méthode de Runge-Kutta appliquée à deux EDO d'ordre 1, les temps de calcul seront comparables. La complexité par évaluation de la fonction f est similaire qu'elle soit linéaire ou non linéaire. Le nombre d'évaluations par pas est identique et dépend uniquement de l'ordre de la méthode Runge-Kutta utilisée."
+            },
+            {
+                id: 19,
+                category: "df",
+                text: "L'erreur local discrétisation ne dépend pas de l'équation différentielle résolue, elle dépend seulement de la méthode numérique de résolution choisie :",
+                options: [
+                    "Vrai",
+                    "Faux"
+                ],
+                correctAnswer: 1, // Faux
+                explanation: "L'erreur locale de discrétisation dépend à la fois de la méthode numérique choisie et de l'équation différentielle résolue. Par exemple, pour la méthode d'Euler explicite, l'erreur est proportionnelle à h²/2·y''(tn), où y'' dépend directement de l'équation différentielle."
+            },
+            {
+                id: 20,
+                category: "df",
+                text: "Les différences finies centrées sont plus précises que les différences finies décentrées.",
+                options: [
+                    "Vrai",
+                    "Faux"
+                ],
+                correctAnswer: 0, // Vrai
+                explanation: "Les différences finies centrées sont plus précises que les décentrées. Pour approximer f'(x), la différence centrée a une erreur en O(h²) (ordre 2), tandis que les différences décentrées ont une erreur en O(h) (ordre 1). C'est pourquoi les différences centrées sont généralement préférées lorsqu'elles sont applicables."
+            }
+        ];
+
+        // Fonctions de navigation entre sections
+        document.querySelectorAll('.menu-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const sectionId = this.getAttribute('data-section');
+                
+                // Masquer toutes les sections
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Afficher la section sélectionnée
+                document.getElementById(sectionId).classList.add('active');
+                
+                // Mettre à jour le bouton actif dans le menu
+                document.querySelectorAll('.menu-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Si on va à la section QCM, générer les questions
+                if (sectionId === 'qcm' && document.getElementById('questions-container').children.length === 0) {
+                    generateQuestions();
+                }
+            });
+        });
+        
+        // Générer les questions du QCM
+        function generateQuestions() {
+            const container = document.getElementById('questions-container');
+            
+            questions.forEach(question => {
+                const questionElement = document.createElement('div');
+                questionElement.className = 'question';
+                questionElement.dataset.category = question.category;
+                questionElement.dataset.id = question.id;
+                
+                const questionHeader = document.createElement('div');
+                questionHeader.className = 'question-header';
+                
+                const questionTitle = document.createElement('span');
+                questionTitle.className = 'question-title';
+                questionTitle.textContent = `Question ${question.id}`;
+                
+                questionHeader.appendChild(questionTitle);
+                
+                const questionText = document.createElement('p');
+                questionText.className = 'question-text';
+                questionText.textContent = question.text;
+                
+                const optionsList = document.createElement('ul');
+                optionsList.className = 'options';
+                
+                question.options.forEach((option, index) => {
+                    const optionItem = document.createElement('li');
+                    optionItem.className = 'option';
+                    optionItem.textContent = option;
+                    optionItem.dataset.index = index;
+                    
+                    optionItem.addEventListener('click', function() {
+                        // Ne rien faire si la question a déjà été répondue
+                        if (questionElement.classList.contains('answered')) {
+                            return;
+                        }
+                        
+                        // Sélectionner cette option
+                        optionsList.querySelectorAll('.option').forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        optionItem.classList.add('selected');
+                    });
+                    
+                    optionsList.appendChild(optionItem);
+                });
+                
+                const feedback = document.createElement('div');
+                feedback.className = 'feedback';
+                
+                const actions = document.createElement('div');
+                actions.className = 'actions';
+                
+                const checkButton = document.createElement('button');
+                checkButton.className = 'btn check';
+                checkButton.textContent = 'Vérifier';
+                checkButton.addEventListener('click', function() {
+                    // Vérifier si une option est sélectionnée
+                    const selectedOption = optionsList.querySelector('.option.selected');
+                    if (!selectedOption) {
+                        alert('Veuillez sélectionner une réponse');
+                        return;
+                    }
+                    
+                    // Marquer la question comme répondue
+                    questionElement.classList.add('answered');
+                    
+                    // Récupérer l'index de l'option sélectionnée
+                    const selectedIndex = parseInt(selectedOption.dataset.index);
+                    
+                    // Marquer la bonne réponse et l'option sélectionnée
+                    optionsList.querySelectorAll('.option').forEach((opt, index) => {
+                        if (index === question.correctAnswer) {
+                            opt.classList.add('correct');
+                        } else if (index === selectedIndex) {
+                            opt.classList.add('incorrect');
+                        }
+                    });
+                    
+                    // Afficher le feedback
+                    feedback.textContent = selectedIndex === question.correctAnswer
+                        ? 'Correct ! Bien joué.'
+                        : 'Incorrect. La bonne réponse est : ' + question.options[question.correctAnswer];
+                    feedback.className = selectedIndex === question.correctAnswer
+                        ? 'feedback correct'
+                        : 'feedback incorrect';
+                    feedback.style.display = 'block';
+                    
+                    // Mettre à jour les statistiques
+                    updateStats();
+                });
+                
+                const explainButton = document.createElement('button');
+                explainButton.className = 'btn explanation';
+                explainButton.textContent = 'Explication';
+                explainButton.addEventListener('click', function() {
+                    const explanationContent = questionElement.querySelector('.explanation-content');
+                    if (explanationContent.style.display === 'block') {
+                        explanationContent.style.display = 'none';
+                        explainButton.textContent = 'Explication';
+                    } else {
+                        explanationContent.style.display = 'block';
+                        explainButton.textContent = 'Masquer l\'explication';
+                    }
+                });
+                
+                const resetButton = document.createElement('button');
+                resetButton.className = 'btn reset';
+                resetButton.textContent = 'Réinitialiser';
+                resetButton.addEventListener('click', function() {
+                    // Réinitialiser l'état de la question
+                    questionElement.classList.remove('answered');
+                    
+                    // Réinitialiser les options
+                    optionsList.querySelectorAll('.option').forEach(opt => {
+                        opt.classList.remove('selected', 'correct', 'incorrect');
+                    });
+                    
+                    // Masquer le feedback
+                    feedback.style.display = 'none';
+                    
+                    // Masquer l'explication
+                    const explanationContent = questionElement.querySelector('.explanation-content');
+                    explanationContent.style.display = 'none';
+                    explainButton.textContent = 'Explication';
+                    
+                    // Mettre à jour les statistiques
+                    updateStats();
+                });
+                
+                actions.appendChild(checkButton);
+                actions.appendChild(explainButton);
+                actions.appendChild(resetButton);
+                
+                const explanationContent = document.createElement('div');
+                explanationContent.className = 'explanation-content';
+                
+                const explanationTitle = document.createElement('h4');
+                explanationTitle.textContent = 'Explication';
+                
+                const explanationText = document.createElement('p');
+                explanationText.textContent = question.explanation;
+                
+                explanationContent.appendChild(explanationTitle);
+                explanationContent.appendChild(explanationText);
+                
+                questionElement.appendChild(questionHeader);
+                questionElement.appendChild(questionText);
+                questionElement.appendChild(optionsList);
+                questionElement.appendChild(feedback);
+                questionElement.appendChild(actions);
+                questionElement.appendChild(explanationContent);
+                
+                container.appendChild(questionElement);
+            });
+        }
+        
+        // Mettre à jour les statistiques
+        function updateStats() {
+            const totalQuestions = questions.length;
+            const answeredQuestions = document.querySelectorAll('.question.answered').length;
+            const correctAnswers = document.querySelectorAll('.option.correct.selected').length;
+            
+            document.getElementById('completedQuestions').textContent = `${answeredQuestions}/${totalQuestions}`;
+            document.getElementById('correctAnswers').textContent = correctAnswers;
+            
+            const accuracy = answeredQuestions > 0
+                ? Math.round((correctAnswers / answeredQuestions) * 100)
+                : 0;
+            document.getElementById('accuracy').textContent = `${accuracy}%`;
+            
+            // Mettre à jour la barre de progression
+            const progressPercentage = (answeredQuestions / totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = `${progressPercentage}%`;
+        }
+        
+        // Filtrage des questions par catégorie
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const filter = this.getAttribute('data-filter');
+                
+                // Mettre à jour le bouton actif
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Filtrer les questions
+                document.querySelectorAll('.question').forEach(question => {
+                    if (filter === 'all' || question.dataset.category === filter) {
+                        question.style.display = 'block';
+                    } else {
+                        question.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Recherche dans la section cours
+        document.querySelector('.search-btn').addEventListener('click', function() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            // Si la recherche est vide, afficher toutes les sections
+            if (!searchTerm) {
+                document.querySelectorAll('.cours-section').forEach(section => {
+                    section.style.display = 'block';
+                });
+                return;
+            }
+            
+            // Parcourir toutes les sections de cours
+            document.querySelectorAll('.cours-section').forEach(section => {
+                const text = section.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    section.style.display = 'block';
+                    
+                    // Mettre en surbrillance les occurrences (optionnel)
+                    // Nécessiterait de modifier le DOM de manière plus complexe
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        });
+        
+        // Permettre la recherche en appuyant sur Entrée
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.querySelector('.search-btn').click();
+            }
+        });
+    </script>
+</body>
+</html>
